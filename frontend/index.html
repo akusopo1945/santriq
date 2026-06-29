@@ -123,7 +123,9 @@
       background-color: var(--background);
       color: var(--text-primary);
       line-height: 1.5;
-      overflow-x: hidden;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
@@ -203,6 +205,8 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      height: 100vh;
+      overflow-y: auto;
       background: linear-gradient(135deg, var(--primary-light) 0%, #f0fdf4 100%);
       padding: var(--spacing-md);
     }
@@ -265,7 +269,9 @@
     /* LAYOUT: APP SHELL (SIDEBAR & MAIN CONTENT) */
     #app-shell {
       display: none;
-      min-height: 100vh;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
     }
 
     .sidebar {
@@ -280,6 +286,8 @@
       display: flex;
       flex-direction: column;
       z-index: 500;
+      height: 100vh;
+      overflow-y: auto;
       transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -447,7 +455,8 @@
       margin-left: 260px;
       padding: var(--spacing-xl);
       padding-top: 80px;
-      min-height: 100vh;
+      height: 100vh;
+      overflow-y: auto;
       transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -909,6 +918,10 @@
       font-size: 13px;
     }
 
+    #theme-toggle, #notif-btn, #profile-menu-btn {
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
     /* RESPONSIVE LAYOUT (MOBILE FIRST DETECTOR) */
     @media (max-width: 768px) {
       body {
@@ -939,7 +952,7 @@
         align-items: center;
       }
 
-      /* Adjust main container left margin and lock width to prevent horizontal overflow */
+      /* Adjust main container left margin, lock width and enable vertical scrolling */
       .main-container,
       #app-shell.sidebar-collapsed .main-container {
         margin-left: 80px !important;
@@ -947,8 +960,18 @@
         max-width: calc(100vw - 80px) !important;
         padding: var(--spacing-md) !important;
         padding-top: 80px !important;
-        overflow-x: hidden;
+        height: 100vh !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
         transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Hide top buttons when sidebar is expanded on mobile to avoid overlap */
+      #app-shell:not(.sidebar-collapsed) #theme-toggle,
+      #app-shell:not(.sidebar-collapsed) #notif-btn,
+      #app-shell:not(.sidebar-collapsed) #profile-menu-btn {
+        opacity: 0 !important;
+        pointer-events: none !important;
       }
 
       /* Hiding brand text, nav label, user-info when collapsed */
