@@ -911,8 +911,21 @@
 
     /* RESPONSIVE LAYOUT (MOBILE FIRST DETECTOR) */
     @media (max-width: 768px) {
+      body {
+        overflow-x: hidden;
+        width: 100vw;
+      }
+
+      #app-shell {
+        overflow-x: hidden;
+        width: 100vw;
+      }
+
       .sidebar {
-        left: 0;
+        position: fixed;
+        left: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
         width: 260px;
         box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
         transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -926,12 +939,15 @@
         align-items: center;
       }
 
-      /* Adjust main container left margin to match 80px sidebar width */
+      /* Adjust main container left margin and lock width to prevent horizontal overflow */
       .main-container,
       #app-shell.sidebar-collapsed .main-container {
         margin-left: 80px !important;
+        width: calc(100vw - 80px) !important;
+        max-width: calc(100vw - 80px) !important;
         padding: var(--spacing-md) !important;
         padding-top: 80px !important;
+        overflow-x: hidden;
         transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
@@ -1019,6 +1035,7 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 12px;
+        width: 100%;
       }
 
       #page-actions {
@@ -1034,13 +1051,16 @@
       /* Grid elements */
       .dashboard-grid {
         grid-template-columns: 1fr !important;
+        width: 100%;
       }
 
       /* Table responsive container */
       .table-container {
+        width: 100%;
         overflow-x: auto;
         border: 1px solid var(--border);
         border-radius: var(--rounded-md);
+        -webkit-overflow-scrolling: touch;
       }
 
       /* Modal structure on mobile */
