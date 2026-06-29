@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SantriQ</string>
+    <string name="title_activity_main">SantriQ</string>
+    <string name="package_name">com.santriq.app</string>
+    <string name="custom_url_scheme">com.santriq.app</string>
+</resources>
