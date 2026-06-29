@@ -282,19 +282,30 @@
       width: 260px;
       background-color: var(--surface);
       border-right: 1px solid var(--border);
-      padding: var(--spacing-lg);
       display: flex;
       flex-direction: column;
       z-index: 500;
       height: 100vh;
+      overflow: visible;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sidebar-content {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+      padding: var(--spacing-lg);
       overflow-y: auto;
-      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow-x: hidden;
+      box-sizing: border-box;
     }
 
     .sidebar-toggle-btn {
       position: absolute;
       right: -14px;
-      top: 24px;
+      top: 50%;
+      transform: translateY(-50%);
       background-color: var(--surface);
       border: 1px solid var(--border);
       color: var(--text-secondary);
@@ -307,19 +318,21 @@
       cursor: pointer;
       box-shadow: var(--shadow-soft);
       transition: all 0.2s ease;
-      z-index: 510;
+      z-index: 2010;
     }
 
     .sidebar-toggle-btn:hover {
       background-color: var(--primary-light);
       color: var(--primary-dark);
       border-color: var(--primary);
-      transform: scale(1.1);
+      transform: translateY(-50%) scale(1.1);
     }
 
     /* COLLAPSIBLE SIDEBAR STYLES */
     #app-shell.sidebar-collapsed .sidebar {
       width: 80px;
+    }
+    #app-shell.sidebar-collapsed .sidebar-content {
       padding: var(--spacing-lg) var(--spacing-sm);
       align-items: center;
     }
@@ -941,13 +954,16 @@
         bottom: 0 !important;
         width: 260px;
         box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
-        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 1000; /* Layer paling atas */
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 2000; /* Layer paling atas */
+        overflow: visible;
       }
 
       /* When collapsed on mobile, DO NOT hide. Shrink to 80px */
       #app-shell.sidebar-collapsed .sidebar {
         width: 80px;
+      }
+      #app-shell.sidebar-collapsed .sidebar-content {
         padding: var(--spacing-lg) var(--spacing-sm);
         align-items: center;
       }
@@ -1024,7 +1040,8 @@
       .sidebar-toggle-btn {
         position: absolute;
         right: -14px;
-        top: 24px;
+        top: 50%;
+        transform: translateY(-50%);
         background-color: var(--surface);
         border: 1px solid var(--border);
         color: var(--text-secondary);
@@ -1036,7 +1053,7 @@
         justify-content: center;
         cursor: pointer;
         box-shadow: var(--shadow-soft);
-        z-index: 1010;
+        z-index: 2010;
         transition: all 0.2s ease;
       }
 
@@ -1044,13 +1061,15 @@
         position: absolute;
         right: -14px;
         left: auto;
-        top: 24px;
+        top: 50%;
+        transform: translateY(-50%);
         width: 28px;
         height: 28px;
         background-color: var(--surface);
         color: var(--text-secondary);
         border-radius: 50%;
         border: 1px solid var(--border);
+        z-index: 2010;
       }
 
       /* Page headers */
@@ -1176,7 +1195,13 @@
             </button>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; margin-top: var(--spacing-sm);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin: var(--spacing-sm) 0 var(--spacing-md);">
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); cursor: pointer; user-select: none;">
+            <input type="checkbox" id="login-remember" style="accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer;">
+            Ingat saya
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px;">
           Masuk ke Akun
         </button>
       </form>
@@ -1194,23 +1219,25 @@
       <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" aria-label="Toggle Sidebar">
         <i data-lucide="chevron-left" id="sidebar-toggle-icon" style="width: 16px; height: 16px;"></i>
       </button>
-      <div class="brand">
-        <span id="sidebar-logo-container" style="display: flex; align-items: center; justify-content: center; overflow: hidden; width: 28px; height: 28px; border-radius: 4px;">
-          <i data-lucide="book-marked" style="width: 28px; height: 28px; color: var(--primary);"></i>
-        </span>
-        <h2 class="brand-text" id="sidebar-title-text">SantriQ</h2>
-      </div>
-      <ul class="nav-list" id="sidebar-nav">
-        <!-- Dynamic based on user role -->
-      </ul>
-      <div class="sidebar-footer">
-        <div class="user-info">
-          <span class="user-name" id="profile-name">User Name</span>
-          <span class="user-role" id="profile-role">Admin</span>
+      <div class="sidebar-content">
+        <div class="brand">
+          <span id="sidebar-logo-container" style="display: flex; align-items: center; justify-content: center; overflow: hidden; width: 28px; height: 28px; border-radius: 4px;">
+            <i data-lucide="book-marked" style="width: 28px; height: 28px; color: var(--primary);"></i>
+          </span>
+          <h2 class="brand-text" id="sidebar-title-text">SantriQ</h2>
         </div>
-        <button class="logout-btn" id="logout-btn">
-          <i data-lucide="log-out" style="width: 20px; height: 20px;"></i>
-        </button>
+        <ul class="nav-list" id="sidebar-nav">
+          <!-- Dynamic based on user role -->
+        </ul>
+        <div class="sidebar-footer">
+          <div class="user-info">
+            <span class="user-name" id="profile-name">User Name</span>
+            <span class="user-role" id="profile-role">Admin</span>
+          </div>
+          <button class="logout-btn" id="logout-btn">
+            <i data-lucide="log-out" style="width: 20px; height: 20px;"></i>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1542,6 +1569,21 @@
       if (dropdown) dropdown.classList.remove('active');
     }
 
+    // Prefill remember me credentials
+    function prefillRememberMe() {
+      const storedEmail = localStorage.getItem('remember_email');
+      const storedPassword = localStorage.getItem('remember_password');
+      if (storedEmail) {
+        document.getElementById('login-email').value = storedEmail;
+        document.getElementById('login-password').value = storedPassword || '';
+        document.getElementById('login-remember').checked = true;
+      } else {
+        document.getElementById('login-email').value = '';
+        document.getElementById('login-password').value = '';
+        document.getElementById('login-remember').checked = false;
+      }
+    }
+
     // Auth check on startup
     async function checkAuth() {
       const token = localStorage.getItem('token');
@@ -1551,6 +1593,7 @@
         document.getElementById('profile-menu-btn').style.display = 'none';
         document.getElementById('notif-btn').style.display = 'none';
         stopNotificationPolling();
+        prefillRememberMe();
         lucide.createIcons();
         return;
       }
@@ -1595,6 +1638,7 @@
         const lp = document.getElementById('login-page');
         lp.style.opacity = '1';
         lp.style.display = 'flex';
+        prefillRememberMe();
         showToast('Sesi telah habis, silakan masuk kembali', 'error');
         lucide.createIcons();
       }
@@ -1604,6 +1648,7 @@
       e.preventDefault();
       const email = document.getElementById('login-email').value;
       const password = document.getElementById('login-password').value;
+      const remember = document.getElementById('login-remember').checked;
 
       try {
         const response = await fetch(`${API_BASE}/auth/login`, {
@@ -1616,6 +1661,16 @@
         }
         const data = await response.json();
         localStorage.setItem('token', data.access_token);
+
+        // Remember me logic
+        if (remember) {
+          localStorage.setItem('remember_email', email);
+          localStorage.setItem('remember_password', password);
+        } else {
+          localStorage.removeItem('remember_email');
+          localStorage.removeItem('remember_password');
+        }
+
         showToast('Login berhasil!');
         // Show login-to-app transition
         const loginPage = document.getElementById('login-page');
@@ -1921,13 +1976,48 @@
 
             <!-- QUIZ GENERATOR -->
             <div id="ai-panel-quiz" class="ai-tab-panel">
-              <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;">Masukkan teks materi ajar, AI akan menghasilkan <strong>3 soal pilihan ganda</strong> otomatis.</p>
-              <textarea id="ai-quiz-input" class="form-control" rows="5"
-                placeholder="Contoh: Tajwid Ikhfa adalah hukum bacaan yang terjadi ketika nun mati atau tanwin bertemu dengan huruf-huruf tertentu..."
-                style="resize:vertical;margin-bottom:12px;"></textarea>
+              <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;">Pilih jilid dan topik materi, AI akan menghasilkan soal latihan pilihan ganda secara otomatis.</p>
+              
+              <div class="grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label for="ai-quiz-jilid">Pilih Jilid / Tingkat</label>
+                  <select id="ai-quiz-jilid" class="form-control" onchange="onAiJilidChange()">
+                    <option value="">-- Pilih Jilid --</option>
+                    <option value="Jilid 1">Jilid 1 (10 Soal)</option>
+                    <option value="Jilid 2">Jilid 2 (10 Soal)</option>
+                    <option value="Jilid 3">Jilid 3 (10 Soal)</option>
+                    <option value="Jilid 4">Jilid 4 (10 Soal)</option>
+                    <option value="Jilid 5">Jilid 5 (25 Soal)</option>
+                    <option value="Jilid 6">Jilid 6 (25 Soal)</option>
+                    <option value="Al Quran">Al Quran (25 Soal)</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label for="ai-quiz-topic">Pilih Topik Materi</label>
+                  <select id="ai-quiz-topic" class="form-control" onchange="onAiTopicChange()">
+                    <option value="custom">-- Kustom / Input Teks Sendiri --</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom:12px;">
+                <label for="ai-quiz-input">Materi Ajar / Prompt Kustom</label>
+                <textarea id="ai-quiz-input" class="form-control" rows="4"
+                  placeholder="Tulis materi ajar di sini..."
+                  style="resize:vertical;"></textarea>
+              </div>
+
+              <div class="form-group" style="margin-bottom:16px;">
+                <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary);cursor:pointer;user-select:none;">
+                  <input type="checkbox" id="ai-quiz-interactive" checked style="accent-color:var(--primary);width:16px;height:16px;cursor:pointer;">
+                  <strong>Aktifkan Simulasi Ujian Interaktif</strong> (Bisa langsung mencoba menjawab soal)
+                </label>
+              </div>
+
               <button id="ai-quiz-btn" class="btn btn-primary" onclick="runAiQuiz()">
                 <i data-lucide="wand-2" style="width:15px;height:15px;"></i>&nbsp;Generate Soal
               </button>
+              
               <div id="ai-quiz-result" style="margin-top:18px;display:none;"></div>
             </div>
 
@@ -1989,45 +2079,320 @@
       </div>`;
     }
 
+    const aiJilidTopics = {
+      'Jilid 1': [
+        { name: "Huruf Hijaiyah Tunggal Fathah", content: "Pengenalan huruf hijaiyah tunggal berharakat fathah dari Alif sampai Ya. Cara melafalkan bunyi pendek a, ba, ta, tsa dengan tepat tanpa mengeja." },
+        { name: "Membaca Kata Pendek (2-3 Huruf)", content: "Latihan merangkai 2 hingga 3 huruf berharakat fathah menjadi kata pendek, misalnya 'kata', 'dzhaba', 'khalaqa'. Harus dibaca langsung secara cepat dan tajam." }
+      ],
+      'Jilid 2': [
+        { name: "Kasrah dan Dhammah", content: "Mengenal harakat Kasrah (bunyi i) dan Dhammah (bunyi u). Membaca kata dengan variasi harakat fathah, kasrah, dan dhammah pendek secara langsung." },
+        { name: "Bacaan Panjang (Mad Asli / Thabi'i)", content: "Ketentuan membaca panjang (2 harakat) ketika harakat fathah diikuti alif, kasrah diikuti ya sukun, dan dhammah diikuti wawu sukun." }
+      ],
+      'Jilid 3': [
+        { name: "Tanwin", content: "Membaca harakat ganda tanwin: Fathatain (an), Kasratain (in), dan Dhammatain (un). Cara menyuarakan nun mati samar di akhir harakat." },
+        { name: "Sukun (Huruf Mati) & Qalqalah", content: "Membaca huruf sukun (mati) dan membedakan pelafalan huruf qalqalah (baju di toko - Ba, Jim, Dal, Tha, Qaf) yang harus memantul ketika sukun." }
+      ],
+      'Jilid 4': [
+        { name: "Hukum Nun Sukun / Tanwin", content: "Hukum tajwid nun mati atau tanwin bertemu huruf hijaiyah: Izhar Halqi (jelas), Ikhfa Haqiqi (samar), Idgham Bighunnah (dengung), Idgham Bilaghunnah (tanpa dengung), dan Iqlab (berubah bunyi m)." },
+        { name: "Hukum Mim Sukun", content: "Hukum mim mati bertemu huruf hijaiyah: Ikhfa Syafawi (bertemu ba, dengung), Idgham Mimi/Mutamatsilain (bertemu mim, dengung), dan Izhar Syafawi (bertemu selain ba dan mim, jelas)." }
+      ],
+      'Jilid 5': [
+        { name: "Ghunnah & Tanda Waqaf", content: "Membaca dengung ditahan pada huruf Nun Tasydid (Nn...) dan Mim Tasydid (Mm...). Mengenal cara berhenti (waqaf) dan memulai kembali (ibtida) sesuai rambu waqaf." },
+        { name: "Mad Wajib Muttasil & Mad Jaiz Munfasil", content: "Mengenal bacaan panjang 4-5 harakat: Mad Wajib Muttasil (mad asli bertemu hamzah dalam satu kata) dan Mad Jaiz Munfasil (mad asli bertemu hamzah di kata terpisah)." }
+      ],
+      'Jilid 6': [
+        { name: "Bacaan Gharib (Saktah, Imalah, dll)", content: "Membaca lafazh tidak biasa (gharib) dalam Al-Qur'an: Saktah (berhenti sejenak tanpa bernapas), Imalah (memiringkan bunyi fathah ke kasrah), Isymam (memonyongkan bibir), Tashil (meringankan hamzah kedua), Naql (memindahkan harakat)." },
+        { name: "Hukum Alif Lam & Lafazh Allah", content: "Membedakan Alif Lam Syamsiyah (lebur masuk ke huruf berikutnya) dan Alif Lam Qamariyah (jelas dibaca L). Cara melafalkan lafazh Allah tebal (tafkhim) dan tipis (tarqiq)." }
+      ],
+      'Al Quran': [
+        { name: "Tajwid Praktis & Makhorijul Huruf", content: "Pemahaman menyeluruh mengenai letak keluarnya huruf (makhraj) serta sifat-sifat huruf (hames, jahr, syiddah). Integrasi hukum tajwid lengkap dalam tilawah Juz Amma dan Al-Qur'an." },
+        { name: "Waqaf Ibtida & Gharibul Qur'an", content: "Kemampuan memilah tempat berhenti yang baik agar tidak merusak makna ayat, serta mengenali seluruh lafazh gharib (asing/langka) di dalam mushaf Al-Qur'an." }
+      ]
+    };
+
+    function onAiJilidChange() {
+      const jilid = document.getElementById('ai-quiz-jilid').value;
+      const topicSelect = document.getElementById('ai-quiz-topic');
+      const inputArea = document.getElementById('ai-quiz-input');
+      
+      topicSelect.innerHTML = '<option value="custom">-- Kustom / Input Teks Sendiri --</option>';
+      
+      if (!jilid || !aiJilidTopics[jilid]) {
+        inputArea.value = '';
+        return;
+      }
+      
+      const topics = aiJilidTopics[jilid];
+      topics.forEach((t, i) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.innerText = t.name;
+        topicSelect.appendChild(opt);
+      });
+      
+      topicSelect.value = "0";
+      onAiTopicChange();
+    }
+
+    function onAiTopicChange() {
+      const jilid = document.getElementById('ai-quiz-jilid').value;
+      const topicIdx = document.getElementById('ai-quiz-topic').value;
+      const inputArea = document.getElementById('ai-quiz-input');
+      
+      if (topicIdx === 'custom') {
+        inputArea.value = '';
+        inputArea.placeholder = 'Tulis materi ajar atau prompt kustom Anda di sini...';
+        return;
+      }
+      
+      if (jilid && aiJilidTopics[jilid] && aiJilidTopics[jilid][topicIdx]) {
+        inputArea.value = aiJilidTopics[jilid][topicIdx].content;
+      }
+    }
+
+    let lastGeneratedQuiz = null;
+
     async function runAiQuiz() {
+      const jilidVal = document.getElementById('ai-quiz-jilid').value;
       const text = document.getElementById('ai-quiz-input').value.trim();
+      const isInteractive = document.getElementById('ai-quiz-interactive').checked;
+
       if (!text) { showToast('Masukkan teks materi terlebih dahulu.', 'error'); return; }
+      
       aiSetLoading('ai-quiz-btn', 'ai-quiz-result', 'Generate Soal');
       try {
         const res = await fetch(`${API_BASE}/ai/quiz-generator`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
-          body: JSON.stringify({ contentText: text })
+          body: JSON.stringify({ contentText: text, jilid: jilidVal })
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || 'Gagal generate soal');
-        let html = '';
+        
         const items = Array.isArray(data) ? data : (data.questions || []);
-        if (items.length > 0) {
-          html = `<div style="display:flex;flex-direction:column;gap:12px;">` + items.map((q, i) => `
-            <div style="border:1px solid var(--border);border-radius:10px;padding:16px;background:var(--background);">
-              <div style="display:flex;gap:10px;align-items:flex-start;">
-                <span style="background:var(--primary);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">${i+1}</span>
-                <strong style="font-size:13px;color:var(--text-primary);line-height:1.5;">${q.question}</strong>
-              </div>
-              <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px;padding-left:34px;">
-                ${(q.options||[]).map((o, oi) => {
-                  const isAnswer = o === q.answer;
-                  const letters = ['A','B','C','D'];
-                  return `<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:6px;background:${isAnswer ? '#dcfce7' : 'var(--surface)'};border:1px solid ${isAnswer ? '#86efac' : 'var(--border)'};">
-                    <span style="font-weight:700;font-size:12px;color:${isAnswer ? '#16a34a' : 'var(--text-secondary)'};">${letters[oi]}</span>
-                    <span style="font-size:13px;color:${isAnswer ? '#15803d' : 'var(--text-primary)'};">${o}</span>
-                    ${isAnswer ? '<span style="margin-left:auto;font-size:11px;background:#16a34a;color:#fff;padding:2px 8px;border-radius:999px;">Jawaban ✓</span>' : ''}
-                  </div>`;
-                }).join('')}
-              </div>
-            </div>`).join('') + '</div>';
-        } else {
-          html = wrapMdInBox(`<pre style="font-size:12px;overflow:auto;">${JSON.stringify(data,null,2)}</pre>`);
+        if (items.length === 0) {
+          throw new Error('Format respon AI tidak mengandung daftar soal yang valid.');
         }
-        document.getElementById('ai-quiz-result').innerHTML = html;
-      } catch(e) { aiShowError('ai-quiz-result', e.message); }
-      aiDoneLoading('ai-quiz-btn', '<i data-lucide="wand-2" style="width:15px;height:15px;"></i>', 'Generate Soal');
+
+        lastGeneratedQuiz = items;
+        renderQuizOutput(items, isInteractive);
+      } catch (err) {
+        aiShowError('ai-quiz-result', err.message);
+      } finally {
+        aiDoneLoading('ai-quiz-btn', '<i data-lucide="wand-2" style="width:15px;height:15px;"></i>', 'Generate Soal');
+      }
+    }
+
+    function renderQuizOutput(items, isInteractive) {
+      const container = document.getElementById('ai-quiz-result');
+      container.style.display = 'block';
+      
+      let html = '';
+      
+      html += `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;background:var(--primary-light);padding:12px 16px;border-radius:10px;border:1px solid var(--border);gap:12px;flex-wrap:wrap;">
+          <span style="font-size:13px;font-weight:600;color:var(--primary-dark);">
+            🎉 Berhasil generate ${items.length} soal untuk ${document.getElementById('ai-quiz-jilid').value || 'Materi Kustom'}
+          </span>
+          <button class="btn btn-secondary" style="padding:6px 12px;font-size:12px;display:flex;align-items:center;gap:4px;" onclick="copyQuizToClipboard()">
+            <i data-lucide="copy" style="width:14px;height:14px;"></i>&nbsp;Salin Semua Soal
+          </button>
+        </div>
+      `;
+
+      if (isInteractive) {
+        html += `
+          <div id="interactive-quiz-box" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;box-shadow:var(--shadow-soft);">
+            <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:16px;">
+              <h4 style="margin:0;color:var(--primary-dark);font-size:15px;display:flex;align-items:center;gap:6px;">📝 Simulasi Ujian Interaktif</h4>
+              <span id="quiz-progress" style="font-size:12px;font-weight:600;color:var(--text-secondary);">Soal 1 dari ${items.length}</span>
+            </div>
+            
+            <div id="quiz-question-container"></div>
+            
+            <div id="quiz-nav-actions" style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;border-top:1px solid var(--border);padding-top:16px;">
+              <span id="quiz-score-indicator" style="font-size:13px;font-weight:600;color:var(--success);">Skor: 0</span>
+              <button id="quiz-next-btn" class="btn btn-primary" style="padding:8px 16px;font-size:13px;" onclick="nextInteractiveQuestion()" disabled>
+                Soal Berikutnya&nbsp;<i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
+              </button>
+            </div>
+          </div>
+        `;
+        
+        window.quizCurrentIndex = 0;
+        window.quizScore = 0;
+        
+        container.innerHTML = html;
+        lucide.createIcons();
+        showInteractiveQuestion();
+      } else {
+        html += `<div style="display:flex;flex-direction:column;gap:16px;">` + items.map((q, i) => `
+          <div style="border:1px solid var(--border);border-radius:10px;padding:16px;background:var(--surface);box-shadow:var(--shadow-soft);">
+            <div style="display:flex;gap:10px;align-items:flex-start;">
+              <span style="background:var(--primary);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">${i+1}</span>
+              <strong style="font-size:14px;color:var(--text-primary);line-height:1.5;">${q.question}</strong>
+            </div>
+            <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;padding-left:34px;">
+              ${(q.options||[]).map((o, oi) => {
+                const isAnswer = o === q.answer;
+                return `
+                  <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:6px;border:1px solid ${isAnswer ? 'rgba(34, 197, 94, 0.3)' : 'var(--border)'};background:${isAnswer ? 'rgba(34, 197, 94, 0.05)' : 'var(--background)'};font-size:13px;">
+                    <span style="font-weight:600;color:${isAnswer ? 'var(--success)' : 'var(--text-secondary)'};">${String.fromCharCode(65 + oi)}.</span>
+                    <span style="color:${isAnswer ? 'var(--success-dark)' : 'var(--text-primary)'};">${o}</span>
+                    ${isAnswer ? '<span style="margin-left:auto;color:var(--success);font-weight:700;font-size:12px;">Jawaban Benar</span>' : ''}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `).join('') + `</div>`;
+        
+        container.innerHTML = html;
+        lucide.createIcons();
+      }
+    }
+
+    function showInteractiveQuestion() {
+      const idx = window.quizCurrentIndex;
+      const items = lastGeneratedQuiz;
+      if (!items || !items[idx]) return;
+      
+      const q = items[idx];
+      
+      document.getElementById('quiz-progress').innerText = `Soal ${idx + 1} dari ${items.length}`;
+      document.getElementById('quiz-score-indicator').innerText = `Skor: ${window.quizScore} / ${items.length}`;
+      
+      const qContainer = document.getElementById('quiz-question-container');
+      
+      qContainer.innerHTML = `
+        <p style="font-size:14px;font-weight:700;color:var(--text-primary);line-height:1.6;margin-bottom:16px;">
+          ${q.question}
+        </p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          ${q.options.map((o, oi) => `
+            <button class="quiz-opt-btn" style="text-align:left;padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;font-size:13px;display:flex;align-items:center;gap:8px;width:100%;transition:all 0.2s;" onclick="selectQuizOption(this, '${o.replace(/'/g, "\\'")}', '${q.answer.replace(/'/g, "\\'")}')">
+              <span style="font-weight:700;background:var(--background);border-radius:4px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);flex-shrink:0;">${String.fromCharCode(65 + oi)}</span>
+              <span>${o}</span>
+            </button>
+          `).join('')}
+        </div>
+      `;
+      
+      document.getElementById('quiz-next-btn').disabled = true;
+    }
+
+    function selectQuizOption(btn, selectedOption, correctOption) {
+      const buttons = btn.parentElement.querySelectorAll('.quiz-opt-btn');
+      buttons.forEach(b => {
+        b.disabled = true;
+        b.style.cursor = 'default';
+        const labelText = b.querySelector('span:last-child').innerText;
+        if (labelText === correctOption) {
+          b.style.background = 'rgba(34, 197, 94, 0.1)';
+          b.style.borderColor = 'var(--success)';
+          b.querySelector('span:first-child').style.background = 'var(--success)';
+          b.querySelector('span:first-child').style.color = '#fff';
+        }
+      });
+      
+      if (selectedOption === correctOption) {
+        btn.style.background = 'rgba(34, 197, 94, 0.1)';
+        btn.style.borderColor = 'var(--success)';
+        window.quizScore++;
+        showToast('Benar!', 'success');
+      } else {
+        btn.style.background = 'rgba(239, 68, 68, 0.1)';
+        btn.style.borderColor = 'var(--danger)';
+        btn.querySelector('span:first-child').style.background = 'var(--danger)';
+        btn.querySelector('span:first-child').style.color = '#fff';
+        showToast('Salah!', 'error');
+      }
+      
+      document.getElementById('quiz-score-indicator').innerText = `Skor: ${window.quizScore} / ${lastGeneratedQuiz.length}`;
+      document.getElementById('quiz-next-btn').disabled = false;
+    }
+
+    function nextInteractiveQuestion() {
+      window.quizCurrentIndex++;
+      const items = lastGeneratedQuiz;
+      
+      if (window.quizCurrentIndex < items.length) {
+        showInteractiveQuestion();
+      } else {
+        const percentage = Math.round((window.quizScore / items.length) * 100);
+        let statusColor = 'var(--primary)';
+        let statusTitle = 'Selesai!';
+        let statusDesc = `Anda telah menyelesaikan kuis dengan skor akhir ${percentage}%.`;
+        
+        if (percentage >= 80) {
+          statusColor = 'var(--success)';
+          statusTitle = 'Luar Biasa! 🏆';
+          statusDesc = `Selamat! Anda lulus dengan predikat istimewa. Skor akhir: ${percentage}%.`;
+        } else if (percentage >= 60) {
+          statusColor = 'var(--warning)';
+          statusTitle = 'Cukup Baik! 👍';
+          statusDesc = `Anda berhasil menyelesaikan kuis dengan nilai cukup. Skor akhir: ${percentage}%.`;
+        } else {
+          statusColor = 'var(--danger)';
+          statusTitle = 'Perlu Belajar Lagi! 📚';
+          statusDesc = `Skor akhir Anda masih di bawah target (${percentage}%). Silakan pelajari kembali materi jilid ini.`;
+        }
+        
+        const qBox = document.getElementById('interactive-quiz-box');
+        qBox.innerHTML = `
+          <div style="text-align:center;padding:24px 12px;">
+            <span style="font-size:48px;display:block;margin-bottom:16px;">${percentage >= 80 ? '🏆' : percentage >= 60 ? '🎓' : '📝'}</span>
+            <h3 style="margin:0 0 8px;color:${statusColor};">${statusTitle}</h3>
+            <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:20px;max-width:320px;margin-left:auto;margin-right:auto;">
+              ${statusDesc}
+            </p>
+            <div style="background:var(--background);padding:14px;border-radius:8px;display:inline-flex;gap:20px;border:1px solid var(--border);margin-bottom:24px;">
+              <div>
+                <span style="display:block;font-size:11px;color:var(--text-secondary);font-weight:600;">BENAR</span>
+                <strong style="font-size:18px;color:var(--success);">${window.quizScore}</strong>
+              </div>
+              <div style="border-right:1px solid var(--border);"></div>
+              <div>
+                <span style="display:block;font-size:11px;color:var(--text-secondary);font-weight:600;">TOTAL SOAL</span>
+                <strong style="font-size:18px;color:var(--text-primary);">${items.length}</strong>
+              </div>
+            </div>
+            <div>
+              <button class="btn btn-primary" onclick="restartInteractiveQuiz()">
+                Coba Lagi
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function restartInteractiveQuiz() {
+      if (lastGeneratedQuiz) {
+        renderQuizOutput(lastGeneratedQuiz, true);
+      }
+    }
+
+    function copyQuizToClipboard() {
+      if (!lastGeneratedQuiz) return;
+      
+      let text = `SOAL LATIHAN - ${document.getElementById('ai-quiz-jilid').value || 'MATERI KUSTOM'}\n`;
+      text += `Generated by SantriQ AI Assistant\n`;
+      text += `==========================================\n\n`;
+      
+      lastGeneratedQuiz.forEach((q, i) => {
+        text += `${i+1}. ${q.question}\n`;
+        q.options.forEach((o, oi) => {
+          text += `   ${String.fromCharCode(65 + oi)}. ${o}\n`;
+        });
+        text += `   *Jawaban: ${q.answer}\n\n`;
+      });
+      
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Semua soal berhasil disalin ke clipboard!');
+      }).catch(err => {
+        showToast('Gagal menyalin soal.', 'error');
+      });
     }
 
     async function runAiSummary() {

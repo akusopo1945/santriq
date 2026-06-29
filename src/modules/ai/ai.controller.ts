@@ -24,25 +24,42 @@ export class AiController {
   @Roles(UserRole.ADMIN, UserRole.GURU)
   async generateQuiz(
     @CurrentUser() user: User,
-    @Body() body: { contentText: string },
+    @Body() body: { contentText: string; jilid?: string; count?: number },
   ) {
-    const systemPrompt = `Anda adalah Asisten Guru di SantriQ LMS Madrasah Diniyah. 
-Tugas Anda adalah membuat 3 soal latihan berdasarkan materi teks yang diberikan. 
+    let count = body.count || 3;
+    const jilid = body.jilid;
+    if (jilid) {
+      if (['Jilid 1', 'Jilid 2', 'Jilid 3', 'Jilid 4'].includes(jilid)) {
+        count = 10;
+      } else if (['Jilid 5', 'Jilid 6', 'Al Quran'].includes(jilid)) {
+        count = 25;
+      }
+    }
+
+    const systemPrompt = `Anda adalah Asisten Guru di SantriQ LMS Madrasah Diniyah (Metode Ummi). 
+Tugas Anda adalah membuat tepat ${count} soal latihan pilihan ganda berdasarkan materi teks ${jilid ? `tingkat ${jilid}` : ''} yang diberikan.
+Soal harus disesuaikan dengan tingkat kesulitan dan materi pembelajaran untuk tingkat ${jilid ? jilid : 'santri'}.
 Soal harus dalam format JSON Array tanpa bungkus markdown. Setiap objek soal memiliki format:
 {
   "question": "teks pertanyaan",
   "options": ["opsi A", "opsi B", "opsi C", "opsi D"],
   "answer": "opsi jawaban yang benar (harus persis sama dengan salah satu opsi)"
 }`;
-    const prompt = `Materi Ajar:
+    const prompt = `Materi Ajar / Topik Pembelajaran:
 ${body.contentText}
 
-Buatlah soal latihan sekarang:`;
+Buatlah ${count} soal latihan pilihan ganda sekarang:`;
     const resText = await this.aiGatewayService.generateText(prompt, user.id, systemPrompt, undefined, PromptType.QUIZ_GENERATOR);
     try {
       return JSON.parse(resText);
     } catch {
-      return { text: resText };
+      // In case the AI output has code block backticks
+      try {
+        const cleanJson = resText.replace(/```json/g, '').replace(/```/g, '').trim();
+        return JSON.parse(cleanJson);
+      } catch {
+        return { text: resText };
+      }
     }
   }
 
