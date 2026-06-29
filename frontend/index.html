@@ -915,47 +915,103 @@
         left: 0;
         width: 260px;
         box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        transform: translateX(0);
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000; /* Layer paling atas */
       }
 
-      /* Default state on mobile is collapsed (slid out) */
+      /* When collapsed on mobile, DO NOT hide. Shrink to 80px */
       #app-shell.sidebar-collapsed .sidebar {
-        transform: translateX(-100%);
-        width: 260px;
+        width: 80px;
+        padding: var(--spacing-lg) var(--spacing-sm);
+        align-items: center;
       }
 
-      /* On mobile, main container has no left margin */
+      /* Adjust main container left margin to match 80px sidebar width */
       .main-container,
       #app-shell.sidebar-collapsed .main-container {
-        margin-left: 0 !important;
+        margin-left: 80px !important;
         padding: var(--spacing-md) !important;
         padding-top: 80px !important;
+        transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
-      /* Floating burger-like toggle button when collapsed */
-      #app-shell.sidebar-collapsed .sidebar-toggle-btn {
-        position: fixed;
-        left: 16px;
-        top: 16px;
-        right: auto;
-        z-index: 120;
-        background-color: var(--primary);
-        color: white;
-        border-color: var(--primary);
+      /* Hiding brand text, nav label, user-info when collapsed */
+      #app-shell.sidebar-collapsed .brand {
+        justify-content: center;
+        gap: 0;
+        width: 100%;
+      }
+
+      #app-shell.sidebar-collapsed .brand-text,
+      #app-shell.sidebar-collapsed .nav-item a span,
+      #app-shell.sidebar-collapsed .user-info {
+        display: none !important;
+      }
+
+      #app-shell.sidebar-collapsed .nav-list {
+        width: 100%;
+        align-items: center;
+      }
+
+      #app-shell.sidebar-collapsed .nav-item {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      #app-shell.sidebar-collapsed .nav-item a {
+        width: 48px;
+        height: 48px;
+        padding: 0;
+        justify-content: center;
+        gap: 0;
         border-radius: var(--rounded-md);
-        width: 36px;
-        height: 36px;
       }
 
+      #app-shell.sidebar-collapsed .sidebar-footer {
+        width: 100%;
+        justify-content: center;
+        padding-top: var(--spacing-md);
+      }
+
+      #app-shell.sidebar-collapsed .logout-btn {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        justify-content: center;
+      }
+
+      /* Floating circular toggle button stays on the border */
       .sidebar-toggle-btn {
-        right: -36px;
+        position: absolute;
+        right: -14px;
+        top: 24px;
+        background-color: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: var(--shadow-soft);
+        z-index: 1010;
+        transition: all 0.2s ease;
+      }
+
+      #app-shell.sidebar-collapsed .sidebar-toggle-btn {
+        position: absolute;
+        right: -14px;
+        left: auto;
+        top: 24px;
+        width: 28px;
+        height: 28px;
         background-color: var(--surface);
         color: var(--text-secondary);
-        border-radius: 0 var(--rounded-md) var(--rounded-md) 0;
-        width: 36px;
-        height: 36px;
-        box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+        border-radius: 50%;
+        border: 1px solid var(--border);
       }
 
       /* Page headers */
