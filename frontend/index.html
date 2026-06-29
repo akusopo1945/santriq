@@ -908,6 +908,98 @@
       color: var(--text-secondary);
       font-size: 13px;
     }
+
+    /* RESPONSIVE LAYOUT (MOBILE FIRST DETECTOR) */
+    @media (max-width: 768px) {
+      .sidebar {
+        left: 0;
+        width: 260px;
+        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateX(0);
+      }
+
+      /* Default state on mobile is collapsed (slid out) */
+      #app-shell.sidebar-collapsed .sidebar {
+        transform: translateX(-100%);
+        width: 260px;
+      }
+
+      /* On mobile, main container has no left margin */
+      .main-container,
+      #app-shell.sidebar-collapsed .main-container {
+        margin-left: 0 !important;
+        padding: var(--spacing-md) !important;
+        padding-top: 80px !important;
+      }
+
+      /* Floating burger-like toggle button when collapsed */
+      #app-shell.sidebar-collapsed .sidebar-toggle-btn {
+        position: fixed;
+        left: 16px;
+        top: 16px;
+        right: auto;
+        z-index: 120;
+        background-color: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        border-radius: var(--rounded-md);
+        width: 36px;
+        height: 36px;
+      }
+
+      .sidebar-toggle-btn {
+        right: -36px;
+        background-color: var(--surface);
+        color: var(--text-secondary);
+        border-radius: 0 var(--rounded-md) var(--rounded-md) 0;
+        width: 36px;
+        height: 36px;
+        box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+      }
+
+      /* Page headers */
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      #page-actions {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      #page-actions .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      /* Grid elements */
+      .dashboard-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Table responsive container */
+      .table-container {
+        overflow-x: auto;
+        border: 1px solid var(--border);
+        border-radius: var(--rounded-md);
+      }
+
+      /* Modal structure on mobile */
+      .modal-content {
+        width: 95% !important;
+        margin: 20px auto;
+        padding: var(--spacing-md) !important;
+      }
+
+      /* Fix top-bar layout */
+      .top-bar-actions {
+        top: 16px !important;
+        right: 16px !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1086,7 +1178,10 @@
 
         // Update brand logo elements
         if (systemSettings.logoUrl) {
-          const logoUrl = systemSettings.logoUrl;
+          let logoUrl = systemSettings.logoUrl;
+          if (logoUrl && logoUrl.startsWith('/')) {
+            logoUrl = 'https://santriq.13.55.3.99.sslip.io' + logoUrl;
+          }
           
           const splashLogo = document.getElementById('splash-logo-container');
           if (splashLogo) {
@@ -3714,7 +3809,7 @@
           <tr>
             <td><strong>${s.student ? s.student.fullname : 'Santri'}</strong></td>
             <td>${s.textContent || '<span style="color: var(--text-secondary); font-style: italic;">Tidak ada input teks</span>'}</td>
-            <td>${s.filePath ? `<a href="/uploads/${s.filePath.split('/').pop()}" target="_blank" class="badge badge-info">Lihat File</a>` : 'Tanpa file'}</td>
+            <td>${s.filePath ? `<a href="https://santriq.13.55.3.99.sslip.io/uploads/${s.filePath.split('/').pop()}" target="_blank" class="badge badge-info">Lihat File</a>` : 'Tanpa file'}</td>
             <td>${s.grade !== null ? `<span class="badge badge-success">${s.grade}</span>` : '<span class="badge badge-warning">Belum Dinilai</span>'}</td>
             <td>
               <button class="btn btn-primary" style="padding: 4px 8px; font-size: 12px;" onclick="showGradeModal('${s.id}', '${assignmentId}')">Nilai</button>
